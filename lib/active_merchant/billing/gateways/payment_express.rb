@@ -35,6 +35,11 @@ module ActiveMerchant #:nodoc:
       
       # We require the DPS gateway username and password when the object is created.
       def initialize(options = {})
+        unless options[:logger].nil?
+          self.logger = options[:logger]
+          options.delete(:logger)
+        end
+        
         # A DPS username and password must exist 
         requires!(options, :login, :password)
         # Make the options an instance variable
@@ -182,6 +187,8 @@ module ActiveMerchant #:nodoc:
       def commit(action, request)
         add_credentials(request)
         add_transaction_type(request, action)
+        
+        self.logger.info("Sending request to DPS: #{request}") unless self.logger.nil?
         
         # Parse the XML response
         response = parse( ssl_post(URL, request.to_s) )
