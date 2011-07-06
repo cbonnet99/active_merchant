@@ -185,6 +185,7 @@ module ActiveMerchant #:nodoc:
         
         if defined?(Rails)
           Rails.logger.info("Sending request to DPS: #{request}") unless self.logger.nil?
+        end
         
         # Parse the XML response
         response = parse( ssl_post(URL, request.to_s) )
